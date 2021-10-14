@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 
 const Name = (props) => {
   if (props.fullname) {
@@ -31,14 +31,63 @@ class Age extends React.Component {
   }
 }
 
+const Counter = () => {
+  const [getCounter, setCounter] = React.useState(0)
+  // var count = 10
+  const inc = () => {
+    setCounter(getCounter + 1)
+    // count++
+    // console.log(count)
+  }
+  return (
+    <View style={{flexDirection: 'row', width: '20%', justifyContent: 'space-between'}}>
+      <Button title='+' onPress={inc} />
+      <Text style={{ fontSize: 24 }}>{ getCounter }</Text>
+      <Button
+        title='-'
+        onPress={() => setCounter(getCounter - 1)}
+      />
+    </View>
+  )
+}
+
+class CounterClass extends React.Component {
+  constructor() {
+    super()
+    this.state = { counter: 10 }
+  }
+  render() {
+    return (
+      <View style={{ flexDirection: 'row', width: '20%', justifyContent: 'space-between' }}>
+        <Button
+          title='+'
+          color='red'
+          onPress={
+            () => this.setState({ counter: this.state.counter+1 })
+          } />
+        <Text style={{ fontSize: 24 }}>{this.state.counter}</Text>
+        <Button
+          title='-'
+          color='red'
+          onPress={() => {}}
+        />
+      </View>
+    )
+  }
+}
+
 const App = () => {
   const obj = { fname: "Zaheer", lname: "sani" }
   return (
     <View style={styles.container}>
-      <Name fullname={obj} />
+      <Text>Function Based</Text>
+      <Counter />
+      <Text>Class Based</Text>
+      <CounterClass />
+      {/* <Name fullname={obj} />
       <Name />
       <Age value={34} />
-      <StatusBar style="auto" />
+      <StatusBar style="auto" /> */}
     </View>
   );
 }
