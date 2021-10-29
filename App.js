@@ -1,62 +1,54 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput } from 'react-native';
 
-const MainComp = () => {
-  const [getNum, setNum] = React.useState("0")
-  const display = (num) => {
-    // console.log(num)
-    getNum == 0 ? setNum(num) : setNum(getNum + num)
-  }
+const BtnNumPad = ({ text, callMe, color, bgcolor }) => {
   return (
-    <View style={{
-      width: '100%',
-      backgroundColor: 'red',
-      alignItems: 'center',
-    }}>
-      <Text style={{fontSize: 34, color: 'white', alignSelf: 'flex-end', paddingRight: 10}}>{getNum}</Text>
-      <View style={
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={() => callMe(text)}
+      style={
         {
-          flexDirection: 'row',
-          width: '50%',
-          backgroundColor: 'green',
-          justifyContent: 'space-between',
-          padding: 10,
-          margin: 10
-        }}>
-        <View style={{flex: 1, backgroundColor: 'grey', padding:10}}>
-          <Button title="1" onPress={() => display('1')} />
-        </View>
-        <View style={{ height: '100%', flex: 1 }}>
-          <Button title="2" onPress={() => display('2')} />
-        </View>
-        <View style={{ height: '100%', flex: 1 }}>
-          <Button title="3" onPress={() => display('3')} />
-        </View>
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Button title="4" onPress={() => { }} />
-        <Button title="5" onPress={() => { }} />
-        <Button title="6" onPress={() => { }} />
-      </View>
-    </View>
-  );
-}
-
-const StartComp = () => {
-  return (
-    <View>
-      <Button title="Start Here!" onPress={() => { }} />
-    </View>
-  );
+          backgroundColor: bgcolor ? bgcolor : 'red',
+          width: 50,
+          height: 50,
+          justifyContent: 'center',
+          borderRadius: 100,
+          elevation: 5,
+        }}
+    >
+      <Text style={{
+        color: color ? color : 'white',
+        fontSize: 16,
+        alignSelf: 'center'
+      }}>{text}</Text>
+    </TouchableOpacity>
+  )
 }
 
 const App = () => {
-  const [isStarted, setStart] = React.useState(false)
+  const [getText, setText] = React.useState('0')
+  const updateNum = (n) => {
+    getText == '0' ? setText(n) : setText(getText + n)
+  }
+  const msg = "My Button Component"
   return (
     <View style={styles.container}>
-      {!isStarted && <Button title="Start Here!" onPress={() => setStart(true)} />}
-      {isStarted && <MainComp />}
+      <Text style={{ color: 'black' }}>{msg}</Text>
+      <Text style={styles.text}>{getText}</Text>
+
+      <TextInput
+        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5, width: 150, paddingLeft: 10 }}
+        onChangeText={(val) => setText(val)}
+        // value={getText}
+        placeholder="Enter UserName"
+        keyboardType={'number-pad'}
+      />
+      <View style={{flexDirection: 'row', width: '80%', justifyContent: 'space-evenly'}}>
+        <BtnNumPad text="1" callMe={updateNum} color='black' bgcolor='grey' />
+        <BtnNumPad text="2" callMe={updateNum} color='grey' bgcolor='blue' />
+        <BtnNumPad text="3" callMe={updateNum} color='green' bgcolor='white' />
+      </View>
     </View>
   );
 }
