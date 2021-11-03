@@ -2,46 +2,40 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput } from 'react-native';
 
-const BtnNumPad = ({ text, callMe, color, bgcolor }) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={() => callMe(text)}
-      style={
-        {
-          backgroundColor: bgcolor ? bgcolor : 'red',
-          width: 50,
-          height: 50,
-          justifyContent: 'center',
-          borderRadius: 100,
-          elevation: 5,
-        }}
-    >
-      <Text style={{
-        color: color ? color : 'white',
-        fontSize: 16,
-        alignSelf: 'center'
-      }}>{text}</Text>
-    </TouchableOpacity>
-  )
-}
-
 const App = () => {
   const [op, setOp] = React.useState(0)
   const [discount, setDiscount] = React.useState(0)
   const [save, setSave] = React.useState(0)
+
+  React.useEffect(() => {
+    console.log("Component Rendered!")
+    setSave(op / 100 * discount)
+  })
+
+  const calcOp = (n) => {
+    setOp(n)
+    // setSave(op / 100 * discount)
+  }
+  
+  const calcDiscount = (n) => {
+    setDiscount(n)
+    // setSave(op / 100 * discount)
+  }
+
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        onChangeText={(val) => setOp(val)}
+        // onChangeText={(val) => setOp(val)}
+        onChangeText={(val) => calcOp(val)}
         // value={getText}
         placeholder="Original Price"
         keyboardType={'number-pad'}
       />
       <TextInput
         style={styles.input}
-        onChangeText={(val) => setDiscount(val)}
+        // onChangeText={(val) => setDiscount(val)}
+        onChangeText={(val) => calcDiscount(val)}
         // value={getText}
         placeholder="Discount %"
         keyboardType={'number-pad'}
