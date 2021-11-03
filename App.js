@@ -27,28 +27,44 @@ const BtnNumPad = ({ text, callMe, color, bgcolor }) => {
 }
 
 const App = () => {
-  const [getText, setText] = React.useState('0')
-  const updateNum = (n) => {
-    getText == '0' ? setText(n) : setText(getText + n)
-  }
-  const msg = "My Button Component"
+  const [op, setOp] = React.useState(0)
+  const [discount, setDiscount] = React.useState(0)
+  const [save, setSave] = React.useState(0)
   return (
     <View style={styles.container}>
-      <Text style={{ color: 'black' }}>{msg}</Text>
-      <Text style={styles.text}>{getText}</Text>
-
       <TextInput
-        style={{ borderColor: 'blue', borderWidth: 1, borderRadius: 5, width: 150, paddingLeft: 10 }}
-        onChangeText={(val) => setText(val)}
+        style={styles.input}
+        onChangeText={(val) => setOp(val)}
         // value={getText}
-        placeholder="Enter UserName"
+        placeholder="Original Price"
         keyboardType={'number-pad'}
       />
-      <View style={{flexDirection: 'row', width: '80%', justifyContent: 'space-evenly'}}>
-        <BtnNumPad text="1" callMe={updateNum} color='black' bgcolor='grey' />
-        <BtnNumPad text="2" callMe={updateNum} color='grey' bgcolor='blue' />
-        <BtnNumPad text="3" callMe={updateNum} color='green' bgcolor='white' />
-      </View>
+      <TextInput
+        style={styles.input}
+        onChangeText={(val) => setDiscount(val)}
+        // value={getText}
+        placeholder="Discount %"
+        keyboardType={'number-pad'}
+      />
+      <Text style={styles.text}>Original Price: {op}</Text>
+      <Text style={styles.text}>Discount %: {discount}</Text>
+      <Text style={styles.text}>You Saved: {save}</Text>
+      <Text style={styles.text}>Final Price: {op - save}</Text>
+      <TouchableOpacity
+        onPress={() => setSave(op/100*discount)}
+        style={
+          {
+            marginTop: 10,
+            backgroundColor: 'skyblue',
+            width: 150,
+            height: 50,
+            justifyContent: 'center',
+            borderRadius: 10,
+            elevation: 5,
+          }}
+      >
+        <Text style={{ fontSize: 24, color: 'white', alignSelf: 'center'}}>Calculate</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -64,6 +80,16 @@ const styles = StyleSheet.create(
     text: {
       fontSize: 28,
       color: '#897'
+    },
+    input: {
+      borderColor: 'blue',
+      borderWidth: 1,
+      borderRadius: 5,
+      width: 150,
+      height: 30,
+      paddingLeft: 10,
+      margin: 5,
+      fontSize: 24
     }
   }
 );
