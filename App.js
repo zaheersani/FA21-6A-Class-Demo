@@ -10,65 +10,93 @@ import {
   ScrollView,
   FlatList,
   ToastAndroid,
+  Keyboard,
 } from 'react-native';
 
-const ScrollViewDemo = () => {
-  var arr = [34, 45, 34, 23, 56, 67, 78, 56, 45, 45, 34, 5, 56, 5, 67];
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={{ padding: 10 }}
-      // horizontal={true}
-      >
-        {arr.map((i, index) => (
-          <Text style={{ fontSize: 45 }}>
-            item: {i}, index: {index}
-          </Text>
-        ))}
-      </ScrollView>
-    </View>
-  );
-};
-
 const App = () => {
-  var arr = [34, 45, 34, 23, 56, 67, 78, 56, 45, 45, 34, 5, 56, 5, 67];
   const [getText, setText] = React.useState('');
   const [getItems, setItems] = React.useState([
     { data: 'Item 1', key: 1 },
     { data: 'Item 2', key: 3 },
   ]);
+  const [editingKey, setEditingKey] = React.useState()
+  const [isEditing, setIsEditing] = React.useState(false)
   const addItem = () => {
     setItems([...getItems, { data: getText, key: Math.random() }]);
+    Keyboard.dismiss();
+    setText('')
   };
+  
+  console.log(editingKey)
+  const updateItem = () => {
+    setItems(
+      getItems.map(i =>
+        i.key == editingKey ?
+          { data: getText, key: editingKey } :
+          i
+      )
+    )
+    setText('')
+    setIsEditing(false)
+  }
+  const deleteItem = (key) => {
+    console.log(key)
+    setItems(getItems.filter(i=>i.key != key))
+  }
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row' }}>
         <TextInput
-          style={{ fontSize: 16, borderColor: 'blue', borderWidth: 1 }}
+          style={{ fontSize: 26, borderBottomColor: 'blue', borderBottomWidth: 2, width: 100, marginRight: 10 }}
           placeholder="Enter Item"
           onChangeText={setText}
+          value={getText}
         />
-        <Button title="Add" onPress={addItem} />
+        <Button
+          title={isEditing ? "Update" : "Add"}
+          onPress={isEditing ? updateItem : addItem}
+        />
       </View>
       <FlatList
-        style={{ paddingTop: 20 }}
+        style={{ paddingTop: 20, width: '100%' }}
         data={getItems}
-        renderItem={({ item, index }) => (
+        renderItem={({ item }) => (
           <TouchableOpacity
             key={item.key}
             style={{
-              backgroundColor: 'red',
+              backgroundColor: 'green',
               margin: 5,
               padding: 5,
               borderRadius: 15,
-              width: 200,
-            }}>
-            <Text style={{ fontSize: 25 }}>item: {item.data}</Text>
-            <Text style={{ fontSize: 25 }}>index: {index}</Text>
-            <Text style={{ fontSize: 25 }}>key: {item.key}</Text>
+              width: '95%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+
+            }}
+            onPress={() => {
+              setText(item.data)
+              setEditingKey(item.key)
+              setIsEditing(true)
+            }}
+          >
+            <Text style={{ fontSize: 25, color: 'white' }}>{item.data}</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'grey',
+                width: 30,
+                height: 30,
+                borderRadius: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                deleteItem(item.key)
+              }}
+            >
+              <Text style={{color: 'red', fontSize:  20}}>X</Text>
+            </TouchableOpacity>
           </TouchableOpacity>
         )}
-        // numColumns={2}
         ListEmptyComponent={<Text>There is not Data in the List</Text>}
         ListHeaderComponent={<Text style={{ fontSize: 20 }}>TODO Items</Text>}
         ListFooterComponent={
@@ -89,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 20,
+    paddingTop: 30,
   },
 });
 
